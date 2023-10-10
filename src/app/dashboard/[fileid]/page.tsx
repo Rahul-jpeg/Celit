@@ -14,7 +14,7 @@ const Page = async ({ params }: PageProps) => {
   const { fileid } = params;
   const { getUser } = getKindeServerSession();
   const user = getUser();
-  if (!user || !user?.id) redirect(`/auth-callback?origin=dashboard/${fileid}`);
+  if (!user || !user.id) redirect(`/auth-callback?origin=dashboard/${fileid}`);
 
   const file = await db.file.findUnique({
     where: {
@@ -31,7 +31,7 @@ const Page = async ({ params }: PageProps) => {
         {/* PDF side (left) */}
         <div className="flex-1 xl:flex">
           <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-            <PdfRenderer />
+            <PdfRenderer url={file.url} />
           </div>
         </div>
 
