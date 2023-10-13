@@ -3,7 +3,13 @@
 import { trpc } from '@/app/_trpc/client';
 import ChatInput from './ChatInput';
 import Message from './Message';
-import { Loader2, XCircle } from 'lucide-react';
+import {
+  ChevronLeft,
+  Loader2,
+  XCircle,
+} from 'lucide-react';
+import Link from 'next/link';
+import { buttonVariants } from '../ui/button';
 
 interface ChatWrapperProps {
   fileId: string;
@@ -68,9 +74,20 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
               Too many pages...
             </h3>
             <p className="text-zinc-500 text-sm">
-              Your <span className="font-medium">Free</span>
+              Your{' '}
+              <span className="font-medium">Free </span>
               plan supports up to 5 pages per PDF.
             </p>
+            <Link
+              href={`/dashboard`}
+              className={buttonVariants({
+                variant: 'secondary',
+                className: 'mt-4',
+              })}
+            >
+              <ChevronLeft className="h-3 w-3 mr-1.5" />
+              Back
+            </Link>
           </div>
         </div>
         <ChatInput isDisabled />
