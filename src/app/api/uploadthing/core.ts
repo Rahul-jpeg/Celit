@@ -2,9 +2,12 @@ import { db } from '@/db';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
-import { pinecone } from '@/lib/pinecone';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { PineconeStore } from 'langchain/vectorstores/pinecone';
+// import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+// import { PineconeStore } from 'langchain/vectorstores/pinecone';
+// import { OpenAIEmbeddingFunction } from 'chromadb';
+// import { client } from '@/lib/chroma';
+// import { Chroma } from "langchain/vectorstores/chroma";
+
 
 const f = createUploadthing();
 
@@ -38,25 +41,23 @@ export const ourFileRouter = {
 
                 const loader = new PDFLoader(blob);
 
-                const pageLevelDocs = await loader.load();
+                const docs = await loader.load();
 
-                const pageAmt = pageLevelDocs.length;
+                const pageAmt = docs.length;
 
-                // vectorize and index the entire PDF
+                // // vectorize and index the entire PDF
 
-                const pineconeIndex = pinecone.index("celit");
-                console.log('connected to index')
+                // const embeddings = new OpenAIEmbeddings({
+                //     openAIApiKey: process.env.OPENAI_API_KEY!,
+                // })
 
-                const embeddings = new OpenAIEmbeddings({
-                    openAIApiKey: process.env.OPENAI_API_KEY,
-                })
-
-                await PineconeStore.fromDocuments(pageLevelDocs, embeddings, {
-                    pineconeIndex,
-                    namespace: createdFile.id
-                })
-                const stats = await pineconeIndex.describeIndexStats();
-                console.log("created namespace ", stats)
+                // await Chroma.fromDocuments(
+                //     docs, embeddings, {
+                //     collectionName: createdFile.id,
+                //     collectionMetadata: {
+                //         "hnsw:space": "cosine"
+                //     }
+                // })
 
                 await db.file.update({
                     data: {
