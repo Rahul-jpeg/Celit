@@ -28,26 +28,27 @@ export const ChatContextProvider = ({
   children,
 }: ChatContextProviderProps) => {
   const [message, setMessage] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] =
+    useState<boolean>(false);
   const { toast } = useToast();
 
   const { mutate: sendMessage } = useMutation({
-    mutationFn: async ({ message }: { message: string }) => {
+    mutationFn: async ({
+      message,
+    }: {
+      message: string;
+    }) => {
       const res = await fetch('/api/message', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({ fileId, message }),
       });
-      if (!res.ok) throw new Error('Failed to send message');
+      if (!res.ok)
+        throw new Error('Failed to send message');
       return res.body;
     },
   });
 
-  const addMessage = () => {
-    sendMessage({ message });
-  };
+  const addMessage = () => sendMessage({ message });
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>,

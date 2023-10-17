@@ -14,7 +14,8 @@ const Page = async ({ params }: PageProps) => {
   const { fileid } = params;
   const { getUser } = getKindeServerSession();
   const user = getUser();
-  if (!user || !user.id) redirect(`/auth-callback?origin=dashboard/${fileid}`);
+  if (!user || !user.id)
+    redirect(`/auth-callback?origin=dashboard/${fileid}`);
 
   const file = await db.file.findUnique({
     where: {
@@ -37,7 +38,7 @@ const Page = async ({ params }: PageProps) => {
 
         {/* Chat side (right) */}
         <div className="shrink-0 flex-[0.75] border-t border-gray-200 lg:w-96 lg:border-l lg:border-t-0">
-          <ChatWrapper />
+          <ChatWrapper fileId={file.id} />
         </div>
       </div>
     </div>

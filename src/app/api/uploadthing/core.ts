@@ -2,11 +2,9 @@ import { db } from '@/db';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
-// import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-// import { PineconeStore } from 'langchain/vectorstores/pinecone';
-// import { OpenAIEmbeddingFunction } from 'chromadb';
-// import { client } from '@/lib/chroma';
-// import { Chroma } from "langchain/vectorstores/chroma";
+import { pinecone } from '@/lib/pinecone';
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { PineconeStore } from 'langchain/vectorstores/pinecone';
 
 
 const f = createUploadthing();
@@ -41,23 +39,25 @@ export const ourFileRouter = {
 
                 const loader = new PDFLoader(blob);
 
-                const docs = await loader.load();
+                const pageLevelDocs = await loader.load();
 
-                const pageAmt = docs.length;
+                const pageAmt = pageLevelDocs.length;
 
-                // // vectorize and index the entire PDF
+                const pineconeIndex = await pinecone
+                    .Index("celit")
+                    .namespace(createdFile.id)
 
-                // const embeddings = new OpenAIEmbeddings({
-                //     openAIApiKey: process.env.OPENAI_API_KEY!,
-                // })
+                console.log("here")
 
-                // await Chroma.fromDocuments(
-                //     docs, embeddings, {
-                //     collectionName: createdFile.id,
-                //     collectionMetadata: {
-                //         "hnsw:space": "cosine"
-                //     }
-                // })
+                const embeddings = new OpenAIEmbeddings({
+                    openAIApiKey: process.env.OPENAI_API_KEY!,
+                })
+
+                await PineconeStore.fromDocuments(
+                    pageLevelDocs, embeddings, {
+                    pineconeIndex
+                }
+                )
 
                 await db.file.update({
                     data: {
