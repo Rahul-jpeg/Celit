@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { ExtendedMessage } from '@/types';
 import { Message } from '@prisma/client';
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Icons } from '../Icons';
 import ReactMarkdown from 'react-markdown';
 import { format } from 'date-fns';
@@ -11,12 +11,13 @@ interface MessageItemProps {
   isNextMessageSamePerson: boolean;
 }
 
-const MessageItem = ({
-  message,
-  isNextMessageSamePerson,
-}: MessageItemProps) => {
+const MessageItem = forwardRef<
+  HTMLDivElement,
+  MessageItemProps
+>(({ message, isNextMessageSamePerson }, ref) => {
   return (
     <div
+      ref={ref}
       className={cn('flex items-end', {
         'justify-end': message.isUserMessage,
       })}
@@ -93,6 +94,8 @@ const MessageItem = ({
       </div>
     </div>
   );
-};
+});
+
+MessageItem.displayName = 'MessageItem';
 
 export default MessageItem;
