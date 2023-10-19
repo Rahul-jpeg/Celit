@@ -2,7 +2,7 @@
 
 import { trpc } from '@/app/_trpc/client';
 import ChatInput from './ChatInput';
-import Message from './Message';
+import Messages from './Messages';
 import {
   ChevronLeft,
   Loader2,
@@ -99,9 +99,8 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
     <ChatContextProvider fileId={fileId}>
       <div className="relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2">
         <div className="flex-1 justify-between flex flex-col mb-28">
-          <Message />
+          <Messages fileId={fileId} />
         </div>
-
         <ChatInput />
       </div>
     </ChatContextProvider>
