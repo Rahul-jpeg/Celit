@@ -60,8 +60,8 @@ const MessageItem = ({
                 !isNextMessageSamePerson &&
                 message.isUserMessage,
               'rounded-bl-none':
-                isNextMessageSamePerson &&
-                message.isUserMessage,
+                !isNextMessageSamePerson &&
+                !message.isUserMessage,
             },
           )}
         >
