@@ -11,6 +11,7 @@ import { buttonVariants } from './ui/button';
 import UserAccountNav from './UserAccountNav';
 import { ArrowRight } from 'lucide-react';
 import MobileNav from './MobileNav';
+import { getUserSubscriptionPlan } from '@/lib/stripe';
 
 const fragmentMono = Fragment_Mono({
   weight: '400',
@@ -21,6 +22,7 @@ type NavbarProps = {};
 const Navbar = (props: NavbarProps) => {
   const { getUser } = getKindeServerSession();
   const user = getUser();
+  const subscriptionPlan = getUserSubscriptionPlan();
 
   return (
     <nav className="sticky h-14 inset-x-0 top-0 z-30 w-full border-b border-gray- bg-white/75 backdrop-blur-lg transition-all">

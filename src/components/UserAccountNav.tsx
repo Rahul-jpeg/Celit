@@ -11,8 +11,14 @@ import { Avatar, AvatarFallback } from './ui/avatar';
 import Image from 'next/image';
 import { Icons } from './Icons';
 import Link from 'next/link';
-import { Gem } from 'lucide-react';
+import { Crown, Gem } from 'lucide-react';
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/server';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui/tooltip';
 
 interface UserAccountNavProps {
   email: string | undefined;
@@ -42,6 +48,7 @@ const UserAccountNav = async ({
                   src={imageUrl}
                   alt="profile picture"
                   referrerPolicy="no-referrer"
+                  sizes="fill"
                 />
               </div>
             ) : (
@@ -58,8 +65,26 @@ const UserAccountNav = async ({
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-0.5 leading-none">
             {name && (
-              <p className="font-medium text-sm text-black">
-                {name}
+              <p className="font-medium text-sm text-black flex">
+                {name}{' '}
+                {subscriptionPlan?.isSubscribed ? (
+                  <TooltipProvider>
+                    <Tooltip delayDuration={300}>
+                      <TooltipTrigger className="cursor-default">
+                        <span>
+                          <Crown className="h-4 w-4 ml-2 text-yellow-500 bg-yellow-100" />
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent className="mt-5 font-normal">
+                        You are a{' '}
+                        <span className="text-yellow-400 font-semibold">
+                          Pro
+                        </span>{' '}
+                        plan member
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : null}
               </p>
             )}
             {email && (
