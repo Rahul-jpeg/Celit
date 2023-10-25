@@ -1,5 +1,8 @@
 import { cn } from '@/lib/utils';
-import { LoginLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs/server';
+import {
+  LoginLink,
+  RegisterLink,
+} from '@kinde-oss/kinde-auth-nextjs/server';
 import { Fragment_Mono } from 'next/font/google';
 import Link from 'next/link';
 import MaxWidthWrapper from './MaxWidthWrapper';
@@ -17,7 +20,9 @@ const Navbar = (props: NavbarProps) => {
       <MaxWidthWrapper>
         <div className="flex h-14 items-center justify-between border-b border-zinc-200">
           <Link href={'/'} className="flex z-40 text-xl">
-            <span className={fragmentMono.className}>Celit.</span>
+            <span className={fragmentMono.className}>
+              Celit.
+            </span>
           </Link>
           {/* TODO : Mobile Navbar */}
 
@@ -46,7 +51,7 @@ const Navbar = (props: NavbarProps) => {
                     variant: 'default',
                     size: 'sm',
                   }),
-                  'bg-blue-200 text-black hover:bg-blue-300',
+                  'bg-zinc-700 text-white hover:bg-zinc-600',
                 )}
               >
                 Register
