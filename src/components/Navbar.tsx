@@ -67,7 +67,7 @@ const Navbar = (props: NavbarProps) => {
             ) : (
               <>
                 <Link
-                  href={'/pricing'}
+                  href={'/dashboard'}
                   className={buttonVariants({
                     variant: 'default',
                     size: 'sm',
