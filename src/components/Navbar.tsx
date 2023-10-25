@@ -10,6 +10,7 @@ import MaxWidthWrapper from './MaxWidthWrapper';
 import { buttonVariants } from './ui/button';
 import UserAccountNav from './UserAccountNav';
 import { ArrowRight } from 'lucide-react';
+import MobileNav from './MobileNav';
 
 const fragmentMono = Fragment_Mono({
   weight: '400',
@@ -30,7 +31,8 @@ const Navbar = (props: NavbarProps) => {
               Celit.
             </span>
           </Link>
-          {/* TODO : Mobile Navbar */}
+
+          <MobileNav isAuth={!!user} />
 
           <div className="hidden items-center space-x-4 sm:flex">
             {!user ? (

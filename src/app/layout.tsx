@@ -1,19 +1,15 @@
-import { cn } from '@/lib/utils';
-import './globals.css';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import Navbar from '@/components/Navbar';
 import Providers from '@/components/Providers';
-import 'react-loading-skeleton/dist/skeleton.css';
 import { Toaster } from '@/components/ui/toaster';
+import { cn, constructMetaData } from '@/lib/utils';
+import { Inter } from 'next/font/google';
+import 'react-loading-skeleton/dist/skeleton.css';
 import 'simplebar-react/dist/simplebar.min.css';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: 'Celit | PDF whisperer',
-  description: 'Talk to your PDFs',
-};
+export const metadata = constructMetaData();
 
 export default function RootLayout({
   children,

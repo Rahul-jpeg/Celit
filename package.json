@@ -1,5 +1,10 @@
 {
   "name": "celit",
+  "browser" : {
+		"fs": false,
+		"os": false,
+		"path": false
+	},
   "version": "0.1.0",
   "private": true,
   "scripts": {

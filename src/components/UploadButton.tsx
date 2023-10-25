@@ -1,7 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from './ui/dialog';
 import { Button } from './ui/button';
 import Dropzone from 'react-dropzone';
 import { Cloud, FileIcon, Loader2 } from 'lucide-react';
@@ -11,19 +15,29 @@ import { useToast } from './ui/use-toast';
 import { trpc } from '@/app/_trpc/client';
 import { useRouter } from 'next/navigation';
 
-const UploadDropzone = () => {
+const UploadDropzone = ({
+  isSubscribed,
+}: {
+  isSubscribed: boolean;
+}) => {
   const router = useRouter();
-  const [isUploading, setIsUploading] = useState<boolean>(false);
-  const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const { startUpload } = useUploadThing('pdfUploader');
+  const [isUploading, setIsUploading] =
+    useState<boolean>(false);
+  const [uploadProgress, setUploadProgress] =
+    useState<number>(0);
+  const { startUpload } = useUploadThing(
+    isSubscribed ? 'proPlanUploader' : 'freePlanUploader',
+  );
   const { toast } = useToast();
-  const { mutate: startPolling } = trpc.getFile.useMutation({
-    onSuccess: (file) => {
-      router.push(`/dashboard/${file.id}`);
+  const { mutate: startPolling } = trpc.getFile.useMutation(
+    {
+      onSuccess: (file) => {
+        router.push(`/dashboard/${file.id}`);
+      },
+      retry: true,
+      retryDelay: 500,
     },
-    retry: true,
-    retryDelay: 500,
-  });
+  );
 
   const setSimulationProgress = () => {
     setUploadProgress(0);
@@ -52,7 +66,8 @@ const UploadDropzone = () => {
         if (!res) {
           return toast({
             title: 'Something went wrong',
-            description: 'Could not upload file. Please try again later',
+            description:
+              'Could not upload file. Please try again later',
             variant: 'destructive',
           });
         }
@@ -62,7 +77,8 @@ const UploadDropzone = () => {
         if (!key) {
           return toast({
             title: 'Something went wrong',
-            description: 'Could not upload file. Please try again later',
+            description:
+              'Could not upload file. Please try again later',
             variant: 'destructive',
           });
         }
@@ -85,10 +101,14 @@ const UploadDropzone = () => {
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
                 <Cloud className="h-6 w-6 text-zinc-500 mb-2" />
                 <p className="mb-2 text-sm text-gray-500">
-                  <span className="font-semibold">Click to upload</span> or drag
-                  and drop
+                  <span className="font-semibold">
+                    Click to upload
+                  </span>{' '}
+                  or drag and drop
                 </p>
-                <p className="text-xs text-gray-500">PDF (up to 4MB)</p>
+                <p className="text-xs text-gray-500">
+                  PDF (up to {isSubscribed ? '16' : '4'}MB)
+                </p>
               </div>
 
               {acceptedFiles && acceptedFiles[0] ? (
@@ -108,7 +128,9 @@ const UploadDropzone = () => {
                     value={uploadProgress}
                     className="h-1 w-full bg-zinc-200"
                     indicatorColor={
-                      uploadProgress === 100 ? 'bg-green-500' : ''
+                      uploadProgress === 100
+                        ? 'bg-green-500'
+                        : ''
                     }
                   />
                   {uploadProgress < 100 ? (
@@ -138,7 +160,11 @@ const UploadDropzone = () => {
   );
 };
 
-const UploadButton = () => {
+const UploadButton = ({
+  isSubscribed,
+}: {
+  isSubscribed: boolean;
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -150,11 +176,14 @@ const UploadButton = () => {
         }
       }}
     >
-      <DialogTrigger asChild onClick={() => setIsOpen(true)}>
+      <DialogTrigger
+        asChild
+        onClick={() => setIsOpen(true)}
+      >
         <Button>Upload PDF</Button>
       </DialogTrigger>
       <DialogContent>
-        <UploadDropzone />
+        <UploadDropzone isSubscribed={isSubscribed} />
       </DialogContent>
     </Dialog>
   );

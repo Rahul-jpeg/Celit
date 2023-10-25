@@ -2,37 +2,60 @@
 
 import { trpc } from '@/app/_trpc/client';
 import { format } from 'date-fns';
-import { GhostIcon, Loader2, MessageSquare, Plus, Trash } from 'lucide-react';
+import {
+  GhostIcon,
+  Loader2,
+  MessageSquare,
+  Plus,
+  Trash,
+} from 'lucide-react';
 import Link from 'next/link';
 import Skeleton from 'react-loading-skeleton';
 import UploadButton from './UploadButton';
 import { Button } from './ui/button';
 import { useState } from 'react';
+import { getUserSubscriptionPlan } from '@/lib/stripe';
 
-const Dashboard = () => {
-  const [deletingFile, setDeletingFile] = useState<string | null>(null);
+interface DashboardProps {
+  subscriptionPlan: Awaited<
+    ReturnType<typeof getUserSubscriptionPlan>
+  >;
+}
+
+const Dashboard = ({
+  subscriptionPlan,
+}: DashboardProps) => {
+  const [deletingFile, setDeletingFile] = useState<
+    string | null
+  >(null);
   const utils = trpc.useContext();
 
-  const { data: files, isLoading } = trpc.getUserFiles.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-  });
-  const { mutate: deleteFile } = trpc.deleteFile.useMutation({
-    onSuccess() {
-      utils.getUserFiles.invalidate();
-    },
-    onMutate({ id }) {
-      setDeletingFile(id);
-    },
-    onSettled() {
-      setDeletingFile(null);
-    },
-  });
+  const { data: files, isLoading } =
+    trpc.getUserFiles.useQuery(undefined, {
+      refetchOnWindowFocus: false,
+    });
+  const { mutate: deleteFile } =
+    trpc.deleteFile.useMutation({
+      onSuccess() {
+        utils.getUserFiles.invalidate();
+      },
+      onMutate({ id }) {
+        setDeletingFile(id);
+      },
+      onSettled() {
+        setDeletingFile(null);
+      },
+    });
 
   return (
     <main className="mx-auto p-6 max-w-7xl md:p-10">
       <div className="mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0">
-        <h1 className="mb-3 text-5xl text-gray-900 font-bold">My Files</h1>
-        <UploadButton />
+        <h1 className="mb-3 text-5xl text-gray-900 font-bold">
+          My Files
+        </h1>
+        <UploadButton
+          isSubscribed={subscriptionPlan.isSubscribed}
+        />
       </div>
       {/* Displaying the user files */}
 
@@ -67,7 +90,10 @@ const Dashboard = () => {
                 <div className="px-6 mt-4 grid grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500">
                   <div className="flex items-center gap-2">
                     <Plus className="h-4 w-4" />
-                    {format(new Date(file.createdAt), 'MMM yyyy')}
+                    {format(
+                      new Date(file.createdAt),
+                      'MMM yyyy',
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     <MessageSquare className="h-4 w-4" />
@@ -76,7 +102,9 @@ const Dashboard = () => {
                   <Button
                     variant={'destructive'}
                     size={'sm'}
-                    onClick={() => deleteFile({ id: file.id })}
+                    onClick={() =>
+                      deleteFile({ id: file.id })
+                    }
                   >
                     {deletingFile === file.id ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -96,7 +124,9 @@ const Dashboard = () => {
           <h3 className="font-semibold text-xl">
             Looks like a lonely place...
           </h3>
-          <p>You have no files yet. Let&apos;s upload some!</p>
+          <p>
+            You have no files yet. Let&apos;s upload some!
+          </p>
         </div>
       )}
     </main>
