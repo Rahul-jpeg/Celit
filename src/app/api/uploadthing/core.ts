@@ -84,7 +84,7 @@ const onUploadComplete = async ({
         console.log("here")
 
         const embeddings = new OpenAIEmbeddings({
-            openAIApiKey: process.env.OPENAI_API_KEY!,
+            openAIApiKey: process.env.OPENAI_API_KEY,
         })
 
         await PineconeStore.fromDocuments(
